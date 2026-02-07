@@ -121,3 +121,8 @@ Thumbs.db
 # Square Cloud
 squarecloud.config
 squarecloud.app
+
+# Editor Directories and AI configs
+.idea/
+.vscode/
+.agent/

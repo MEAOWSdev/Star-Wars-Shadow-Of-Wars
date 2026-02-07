@@ -1,43 +1,30 @@
-# Svelte + Vite
+# Star Wars: Shadow of Wars 🌌⚔️
 
-This template should help get you started developing with Svelte in Vite.
+Bem-vindo ao **Shadow of Wars**, uma experiência imersiva situada no coração da galáxia de Star Wars. Este projeto traz um dashboard tático avançado e um universo rico para exploração.
 
-## Recommended IDE Setup
+## 🚀 Sobre o Projeto
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+Mergulhe em um universo em constante conflito, onde suas escolhas definem o destino da galáxia. Desenvolvido com tecnologias modernas de web (Svelte, Vite), este dashboard serve como seu centro de comando.
 
-## Need an official Svelte framework?
+### ✨ Funcionalidades Principais
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+*   **3 Facções Distintas**: Escolha seu lado na guerra galáctica. Junte-se à *Rebelião*, mantenha a ordem com o *Império*, ou busque lucro no *Submundo*.
+*   **Profissões & Classes**: Especialize-se como Caçador de Recompensas, Contrabandista, Soldado de Elite ou Diplomata.
+*   **Missões Dinâmicas**: Contratos gerados proceduralmente e campanhas narrativas.
+*   **Planetas em 3D**: Navegue por mapas táticos de planetas icônicos como *Tatooine*, *Hoth* e *Coruscant*.
+*   **Comunicações em Tempo Real**: Chat tático integrado (City/Faction/Global) com criptografia militar.
+*   **Economia Viva**: Mercado dinâmico de recursos e equipamentos.
 
-## Technical considerations
+## 🛠️ Tecnologias
 
-**Why use this over SvelteKit?**
+*   **Frontend**: Svelte 5 + Vite
+*   **Estilização**: CSS Espacial/Militar Customizado
+*   **Deploy**: Square Cloud Ready
 
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
+## 📸 Preview
 
-This template contains as little as possible to get started with Vite + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
+O painel inclui um mapa interativo, sistema de chat "Holo-Link" e um HUD tático responsivo que se adapta de estações de batalha (Desktop) para datapads de campo (Mobile).
 
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
+---
 
-**Why include `.vscode/extensions.json`?**
-
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
-
-**Why enable `checkJs` in the JS template?**
-
-It is likely that most cases of changing variable types in runtime are likely to be accidental, rather than deliberate. This provides advanced typechecking out of the box. Should you like to take advantage of the dynamically-typed nature of JavaScript, it is trivial to change the configuration.
-
-**Why is HMR not preserving my local component state?**
-
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/sveltejs/svelte-hmr/tree/master/packages/svelte-hmr#preservation-of-local-state).
-
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
-
-```js
-// store.js
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
-```
+*Que a Força esteja com você.*
