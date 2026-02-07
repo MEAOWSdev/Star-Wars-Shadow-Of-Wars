@@ -2,17 +2,15 @@
     import { onMount, onDestroy } from "svelte";
 
     let time = "";
-    let millis = "00";
+    // Removed millis to prevent jitter
     let date = "";
     let interval;
 
     onMount(() => {
         const updateTime = () => {
             const now = new Date();
+            // Only HH:MM:SS needed
             time = now.toLocaleTimeString("en-US", { hour12: false });
-            millis = Math.floor(Math.random() * 99)
-                .toString()
-                .padStart(2, "0");
             date = now
                 .toLocaleDateString("en-US", {
                     day: "2-digit",
@@ -22,7 +20,7 @@
                 .toUpperCase();
         };
         updateTime();
-        interval = setInterval(updateTime, 100);
+        interval = setInterval(updateTime, 1000); // 1s update to stop jitter
     });
 
     onDestroy(() => {
@@ -40,13 +38,39 @@
             <span class="bar-value success">ONLINE</span>
         </div>
         <div class="bar-sep"></div>
-        <div class="bar-item">
+        <div class="bar-item fixed-width-loc">
             <span class="bar-label">LOC:</span>
-            <span class="bar-value">TATOOINE // SECTOR 7G</span>
+            <!-- Planet Icon SVG (Minimal) -->
+            <svg
+                class="bar-icon-planet"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+            >
+                <circle cx="12" cy="12" r="9" />
+                <path d="M3.6 9h16.8" />
+                <path d="M3.6 15h16.8" />
+            </svg>
+            <span class="bar-value">TATOOINE</span>
+            <span class="bar-sub-sep">//</span>
+            <!-- City/Sector Icon SVG -->
+            <svg
+                class="bar-icon-city"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+            >
+                <path d="M3 21h18v-8a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8z" />
+                <line x1="12" y1="11" x2="12" y2="21" />
+                <path d="M9 11V7a3 3 0 0 1 6 0v4" />
+            </svg>
+            <span class="bar-value">SECTOR 7G</span>
         </div>
     </div>
 
-    <!-- Center: Free (Visual Reticle Only) -->
+    <!-- Center: Reticle -->
     <div class="bar-center-decor">
         <div class="reticle"></div>
     </div>
@@ -58,8 +82,7 @@
             <span class="bar-label">WINDS.HIGH</span>
         </div>
         <div class="bar-sep"></div>
-        <div class="bar-item">
-            <!-- Tiny Clock SVG -->
+        <div class="bar-item fixed-width-time">
             <svg
                 class="bar-icon"
                 viewBox="0 0 24 24"
@@ -71,14 +94,12 @@
                 <polyline points="12 6 12 12 16 14" />
             </svg>
             <span class="bar-value time">{time}</span>
-            <span class="bar-millis">{millis}</span>
         </div>
     </div>
 </header>
 
 <!-- MOBILE COCKPIT (Visible on small screens - UNTOUCHED) -->
 <div class="mobile-cockpit">
-    <!-- LEFT: Target & Location -->
     <div class="cockpit-group left">
         <div class="data-block">
             <span class="label">TARGET</span>
@@ -91,7 +112,6 @@
         </div>
     </div>
 
-    <!-- RIGHT: Time & Env -->
     <div class="cockpit-group right">
         <div class="env-readout">
             <span class="value warning">42°C</span>
@@ -112,7 +132,6 @@
         <div class="sep-line"></div>
         <div class="time-readout">
             <span class="value time">{time}</span>
-            <span class="millis">{millis}</span>
         </div>
     </div>
 </div>
@@ -122,9 +141,9 @@
      DESKTOP STYLES (Slim & Military)
      ========================================= */
     .desktop-slim-bar {
-        display: none; /* Mobile first hidden */
+        display: none;
         width: 100%;
-        height: 36px; /* Ultra slim as requested */
+        height: 36px;
         background: #050505;
         border-bottom: 1px solid rgba(255, 255, 255, 0.15);
         justify-content: space-between;
@@ -167,7 +186,17 @@
         display: flex;
         align-items: baseline;
         gap: 6px;
-    }
+        white-space: nowrap;
+    } /* Prevent wrapping */
+
+    .fixed-width-loc {
+        min-width: 280px;
+    } /* Fixed width container prevents jitter */
+    .fixed-width-time {
+        min-width: 90px;
+        justify-content: flex-end;
+        font-variant-numeric: tabular-nums;
+    } /* Tabular nums align digits */
 
     .bar-label {
         font-size: 10px;
@@ -182,6 +211,12 @@
         letter-spacing: 1px;
         font-family: "Rajdhani", sans-serif;
     }
+    .bar-sub-sep {
+        color: #444;
+        margin: 0 4px;
+        font-size: 10px;
+    }
+
     .bar-value.success {
         color: var(--color-success);
     }
@@ -192,12 +227,6 @@
         font-family: "Orbitron", sans-serif;
         letter-spacing: 2px;
         font-size: 14px;
-    }
-
-    .bar-millis {
-        font-size: 10px;
-        color: var(--color-metal-light);
-        width: 14px;
     }
 
     .bar-sep {
@@ -212,6 +241,15 @@
         height: 14px;
         color: var(--color-text-secondary);
         opacity: 0.8;
+    }
+    .bar-icon-planet,
+    .bar-icon-city {
+        width: 14px;
+        height: 14px;
+        color: var(--color-accent-blue);
+        opacity: 0.9;
+        position: relative;
+        top: 2px;
     }
 
     /* Center Decoration */
@@ -258,9 +296,7 @@
         }
     }
 
-    /* =========================================
-     MOBILE STYLES (EXACT COPY PRESERVED)
-     ========================================= */
+    /* MOBILE STYLES (PRESERVED) */
     .mobile-cockpit {
         position: absolute;
         top: 10px;
@@ -281,7 +317,6 @@
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
         clip-path: polygon(0 0, 100% 0, 100% 75%, 95% 100%, 5% 100%, 0 75%);
     }
-
     .cockpit-group {
         display: flex;
         align-items: center;
@@ -311,11 +346,6 @@
     .mobile-cockpit .value.time {
         font-family: "Orbitron", sans-serif;
         font-size: 14px;
-    }
-    .mobile-cockpit .millis {
-        font-size: 10px;
-        color: #666;
-        margin-left: 2px;
     }
     .mobile-cockpit .sep-line {
         width: 1px;
