@@ -70,9 +70,10 @@
         </div>
     </div>
 
-    <!-- Center: Reticle -->
-    <div class="bar-center-decor">
-        <div class="reticle"></div>
+    <!-- Center: Title Replacement -->
+    <div class="bar-center-title">
+        <span class="title-main">STAR WARS</span>
+        <span class="title-sub">: SHADOW OF WARS</span>
     </div>
 
     <!-- Right: Telemetry & Time -->
@@ -97,6 +98,35 @@
         </div>
     </div>
 </header>
+
+<!-- LEFT SIDEBAR BUTTONS (DESKTOP & MOBILE) -->
+<div class="tactical-sidebar">
+    <button class="sidebar-btn" aria-label="Profile">
+        <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+        >
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+        </svg>
+    </button>
+    <button class="sidebar-btn" aria-label="Radio">
+        <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+        >
+            <path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9" />
+            <path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5" />
+            <circle cx="12" cy="12" r="2" />
+            <path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5" />
+            <path d="M19.1 4.9C23 8.8 23 15.1 19.1 19" />
+        </svg>
+    </button>
+</div>
 
 <!-- MOBILE COCKPIT (Visible on small screens - UNTOUCHED) -->
 <div class="mobile-cockpit">
@@ -172,6 +202,26 @@
         text-align: right;
     }
 
+    /* Title Style */
+    .bar-center-title {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        font-family: "Orbitron", sans-serif;
+        letter-spacing: 2px;
+        pointer-events: none;
+    }
+    .title-main {
+        color: #fff;
+        font-weight: 900;
+    }
+    .title-sub {
+        color: var(--color-accent-blue);
+        font-weight: 400;
+        opacity: 0.8;
+    }
+
     /* Elements */
     .status-dot {
         width: 6px;
@@ -190,13 +240,13 @@
     } /* Prevent wrapping */
 
     .fixed-width-loc {
-        min-width: 280px;
-    } /* Fixed width container prevents jitter */
+        min-width: 250px;
+    }
     .fixed-width-time {
         min-width: 90px;
         justify-content: flex-end;
         font-variant-numeric: tabular-nums;
-    } /* Tabular nums align digits */
+    }
 
     .bar-label {
         font-size: 10px;
@@ -252,40 +302,6 @@
         top: 2px;
     }
 
-    /* Center Decoration */
-    .bar-center-decor {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        width: 200px;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        pointer-events: none;
-    }
-    .reticle {
-        width: 100%;
-        height: 1px;
-        background: linear-gradient(
-            90deg,
-            transparent,
-            rgba(255, 255, 255, 0.1),
-            transparent
-        );
-    }
-    .reticle::after {
-        content: "";
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        width: 6px;
-        height: 6px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
     @keyframes blink-dot {
         0%,
         100% {
@@ -293,6 +309,59 @@
         }
         50% {
             opacity: 0.4;
+        }
+    }
+
+    /* =========================================
+     SIDEBAR BUTTONS (NEW)
+     ========================================= */
+    .tactical-sidebar {
+        position: fixed;
+        top: 56px;
+        left: 20px; /* Below Header */
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        z-index: 900;
+    }
+
+    .sidebar-btn {
+        width: 42px;
+        height: 42px;
+        background: rgba(10, 10, 12, 0.9);
+        border: 1px solid #333;
+        color: #888;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+    .sidebar-btn:hover {
+        background: #151515;
+        color: #fff;
+        border-color: var(--color-accent-blue);
+        transform: translateX(2px);
+    }
+    .sidebar-btn svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    @media (max-width: 768px) {
+        .tactical-sidebar {
+            top: 70px;
+            left: 16px;
+            gap: 16px;
+        }
+        .sidebar-btn {
+            width: 52px;
+            height: 52px; /* Bigger on Mobile */
+        }
+        .sidebar-btn svg {
+            width: 24px;
+            height: 24px;
         }
     }
 
