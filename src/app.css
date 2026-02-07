@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;500;700&display=swap');
+
+:root {
+  /* MILITARY / TACTICAL PALETTE */
+  --color-bg-dark: #050505;
+  --color-bg-panel: #141414;
+  /* Matte Black */
+
+  --color-metal-black: #0f1012;
+  --color-metal-dark: #2a2a2a;
+  /* Metallic Black Base */
+  --color-metal-light: #526678;
+  /* Metallic Blue-Grey Highlight */
+
+  /* STAR WARS HOLOGRAM / SYSTEM COLORS */
+  --color-accent-blue: #4db8ff;
+  /* Hologram Blue */
+  --color-text-primary: #e0e6ed;
+  /* Metallic White */
+  --color-text-secondary: #8b9bb4;
+  /* Muted Blue-Grey */
+
+  --color-alert: #ff3e3e;
+  /* Tactical Red */
+  --color-success: #35b868;
+  /* System Green */
+  --color-warning: #ffb700;
+  /* Amber */
+
+  --font-main: 'Rajdhani', sans-serif;
+  --font-display: 'Orbitron', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-primary);
+  font-family: var(--font-main);
+  overflow: hidden;
+  /* App-like feel */
+  width: 100vw;
+  height: 100vh;
+}
+
+/* Scrollbar styling for any scrollable areas */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-metal-light);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent-blue);
+}
