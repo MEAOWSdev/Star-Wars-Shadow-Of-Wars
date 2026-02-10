@@ -1,26 +1,21 @@
 <script>
-    import { onMount, onDestroy } from "svelte";
+    import { onMount, onDestroy, createEventDispatcher } from "svelte";
+
+    // Receive day/night icon from parent
+    export let timeOfDayIcon =
+        "M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z";
 
     let time = "";
-    // Removed millis to prevent jitter
-    let date = "";
     let interval;
+    const dispatch = createEventDispatcher();
 
     onMount(() => {
         const updateTime = () => {
             const now = new Date();
-            // Only HH:MM:SS needed
             time = now.toLocaleTimeString("en-US", { hour12: false });
-            date = now
-                .toLocaleDateString("en-US", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                })
-                .toUpperCase();
         };
         updateTime();
-        interval = setInterval(updateTime, 1000); // 1s update to stop jitter
+        interval = setInterval(updateTime, 1000);
     });
 
     onDestroy(() => {
@@ -30,17 +25,9 @@
 
 <!-- DESKTOP SLIM TACTICAL BAR (PC ONLY) -->
 <header class="desktop-slim-bar">
-    <!-- Left: Status & Location -->
     <div class="bar-group">
-        <div class="status-dot"></div>
-        <div class="bar-item">
-            <span class="bar-label">SYS:</span>
-            <span class="bar-value success">ONLINE</span>
-        </div>
-        <div class="bar-sep"></div>
         <div class="bar-item fixed-width-loc">
             <span class="bar-label">LOC:</span>
-            <!-- Planet Icon SVG (Minimal) -->
             <svg
                 class="bar-icon-planet"
                 viewBox="0 0 24 24"
@@ -54,7 +41,6 @@
             </svg>
             <span class="bar-value">TATOOINE</span>
             <span class="bar-sub-sep">//</span>
-            <!-- City/Sector Icon SVG -->
             <svg
                 class="bar-icon-city"
                 viewBox="0 0 24 24"
@@ -70,38 +56,47 @@
         </div>
     </div>
 
-    <!-- Center: Title Replacement -->
     <div class="bar-center-title">
         <span class="title-main">STAR WARS</span>
         <span class="title-sub">: SHADOW OF WARS</span>
     </div>
 
-    <!-- Right: Telemetry & Time -->
     <div class="bar-group right">
-        <div class="bar-item">
+        <!-- Telemetry Hidden on Mobile to save space -->
+        <div class="bar-item desktop-only">
             <span class="bar-value warning">42°C</span>
             <span class="bar-label">WINDS.HIGH</span>
         </div>
-        <div class="bar-sep"></div>
+        <div class="bar-sep desktop-only"></div>
+
         <div class="bar-item fixed-width-time">
+            <!-- Adjusted Cycle Icon vertical alignment -->
             <svg
-                class="bar-icon"
-                viewBox="0 0 24 24"
+                class="bar-icon cycle-icon"
+                xmlns="http://www.w3.org/2000/svg"
                 fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
                 stroke="currentColor"
-                stroke-width="2"
             >
-                <circle cx="12" cy="12" r="10" />
-                <polyline points="12 6 12 12 16 14" />
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d={timeOfDayIcon}
+                />
             </svg>
             <span class="bar-value time">{time}</span>
         </div>
     </div>
 </header>
 
-<!-- LEFT SIDEBAR BUTTONS (DESKTOP & MOBILE) -->
+<!-- SIDEBAR -->
 <div class="tactical-sidebar">
-    <button class="sidebar-btn" aria-label="Profile">
+    <button
+        class="sidebar-btn"
+        aria-label="Profile"
+        on:click={() => dispatch("openProfile")}
+    >
         <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -112,7 +107,11 @@
             <circle cx="12" cy="7" r="4" />
         </svg>
     </button>
-    <button class="sidebar-btn" aria-label="Radio">
+    <button
+        class="sidebar-btn"
+        aria-label="Radio"
+        on:click={() => dispatch("openRadio")}
+    >
         <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -128,52 +127,55 @@
     </button>
 </div>
 
-<!-- MOBILE COCKPIT (Visible on small screens - UNTOUCHED) -->
+<!-- MOBILE COCKPIT -->
 <div class="mobile-cockpit">
     <div class="cockpit-group left">
-        <div class="data-block">
+        <div class="data-block-fixed-left">
             <span class="label">TARGET</span>
             <span class="value prime">TATOOINE</span>
         </div>
+        <!-- FIXED SEPARATOR -->
         <div class="sep-line"></div>
-        <div class="data-block">
+        <div class="data-block-fixed-left">
             <span class="label">LOC</span>
-            <span class="value">MOS EISLEY</span>
+            <!-- ADDED: whitespace-nowrap to prevent 2 lines -->
+            <span class="value nowrap-fix">MOS EISLEY</span>
         </div>
     </div>
 
     <div class="cockpit-group right">
+        <!-- Re-added environment readout for mobile consistency -->
         <div class="env-readout">
             <span class="value warning">42°C</span>
             <svg
                 class="icon-small"
-                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
                 fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
                 stroke="currentColor"
-                stroke-width="2"
             >
-                <circle cx="12" cy="12" r="5" />
-                <path d="M12 1v2" /><path d="M12 21v2" />
-                <path d="M4.22 4.22l1.42 1.42" /><path
-                    d="M18.36 18.36l1.42 1.42"
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d={timeOfDayIcon}
                 />
             </svg>
         </div>
         <div class="sep-line"></div>
-        <div class="time-readout">
+        <div class="time-readout-fixed">
             <span class="value time">{time}</span>
         </div>
     </div>
 </div>
 
 <style>
-    /* =========================================
-     DESKTOP STYLES (Slim & Military)
-     ========================================= */
+    /* ... existing styles ... */
     .desktop-slim-bar {
         display: none;
         width: 100%;
         height: 36px;
+        /* background: #050505; REMOVED to show background transparent if needed, or keep. kept for consistency */
         background: #050505;
         border-bottom: 1px solid rgba(255, 255, 255, 0.15);
         justify-content: space-between;
@@ -202,7 +204,6 @@
         text-align: right;
     }
 
-    /* Title Style */
     .bar-center-title {
         position: absolute;
         left: 50%;
@@ -222,22 +223,12 @@
         opacity: 0.8;
     }
 
-    /* Elements */
-    .status-dot {
-        width: 6px;
-        height: 6px;
-        background: var(--color-success);
-        border-radius: 50%;
-        box-shadow: 0 0 6px var(--color-success);
-        animation: blink-dot 2s infinite;
-    }
-
     .bar-item {
         display: flex;
         align-items: baseline;
         gap: 6px;
         white-space: nowrap;
-    } /* Prevent wrapping */
+    }
 
     .fixed-width-loc {
         min-width: 250px;
@@ -246,6 +237,9 @@
         min-width: 90px;
         justify-content: flex-end;
         font-variant-numeric: tabular-nums;
+        display: flex;
+        align-items: center;
+        gap: 8px !important;
     }
 
     .bar-label {
@@ -267,9 +261,6 @@
         font-size: 10px;
     }
 
-    .bar-value.success {
-        color: var(--color-success);
-    }
     .bar-value.warning {
         color: var(--color-warning);
     }
@@ -302,23 +293,19 @@
         top: 2px;
     }
 
-    @keyframes blink-dot {
-        0%,
-        100% {
-            opacity: 1;
-        }
-        50% {
-            opacity: 0.4;
-        }
+    .cycle-icon {
+        color: var(--color-accent-blue);
+        width: 16px;
+        height: 16px;
+        margin-right: 4px;
+        transform: translateY(2px);
     }
 
-    /* =========================================
-     SIDEBAR BUTTONS (NEW)
-     ========================================= */
+    /* SIDEBAR BUTTONS */
     .tactical-sidebar {
         position: fixed;
         top: 56px;
-        left: 20px; /* Below Header */
+        left: 20px;
         display: flex;
         flex-direction: column;
         gap: 12px;
@@ -351,21 +338,24 @@
 
     @media (max-width: 768px) {
         .tactical-sidebar {
-            top: 70px;
+            top: 119px; /* 3px down */
             left: 16px;
             gap: 16px;
         }
         .sidebar-btn {
             width: 52px;
-            height: 52px; /* Bigger on Mobile */
+            height: 52px;
         }
         .sidebar-btn svg {
             width: 24px;
             height: 24px;
         }
+        .desktop-only {
+            display: none !important;
+        } /* Hide clutter on mobile header if any leaks */
     }
 
-    /* MOBILE STYLES (PRESERVED) */
+    /* MOBILE COCKPIT - FIXED LAYOUT */
     .mobile-cockpit {
         position: absolute;
         top: 10px;
@@ -391,6 +381,19 @@
         align-items: center;
         gap: 8px;
     }
+
+    .data-block-fixed-left {
+        width: auto; /* Changed from fixed 60px to auto to allow width growth if needed, but controlled by nowrap */
+        min-width: 60px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .time-readout-fixed {
+        width: 70px;
+        text-align: right;
+    }
+
     .mobile-cockpit .label {
         font-size: 8px;
         color: #888;
@@ -405,6 +408,12 @@
         letter-spacing: 1px;
         text-transform: uppercase;
     }
+
+    /* ADDED: Fix for line break issue */
+    .nowrap-fix {
+        white-space: nowrap;
+    }
+
     .mobile-cockpit .value.prime {
         color: var(--color-accent-blue);
         text-shadow: 0 0 5px rgba(77, 184, 255, 0.4);

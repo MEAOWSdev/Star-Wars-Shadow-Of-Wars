@@ -64,6 +64,7 @@
         class="tactical-toggle-btn {hasUnread ? 'alert-mode' : ''}"
         on:click={toggleChat}
         in:fade={{ duration: 150 }}
+        aria-label="Open Comms Panel"
     >
         <div class="icon-frame">
             <svg
@@ -98,7 +99,11 @@
                     <div class="db"></div>
                 </div>
                 <!-- Close Button -->
-                <button class="tac-close-btn" on:click={toggleChat}>
+                <button
+                    class="tac-close-btn"
+                    on:click={toggleChat}
+                    aria-label="Close Comms Panel"
+                >
                     <svg
                         viewBox="0 0 24 24"
                         fill="none"
@@ -159,46 +164,53 @@
                 placeholder="ENTER TRANSMISSION"
                 bind:value={inputMessage}
                 on:keydown={(e) => e.key === "Enter" && sendMessage()}
+                aria-label="Message Input"
             />
-            <button class="exec-btn" on:click={sendMessage}> EXECUTE </button>
+            <button
+                class="exec-btn"
+                on:click={sendMessage}
+                aria-label="Send Message"
+            >
+                EXECUTE
+            </button>
         </div>
     </div>
 
     <!-- Hard Backdrop for Mobile Focus -->
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div
         class="tactical-backdrop"
         on:click={toggleChat}
+        on:keydown={(e) => e.key === "Escape" && toggleChat()}
         transition:fade={{ duration: 150 }}
+        role="button"
+        tabindex="0"
+        aria-label="Close Chat Overlay"
     ></div>
 {/if}
 
 <style>
-    /* =========================================
-     VARS & THEME (Military / Low-Vis)
-     ========================================= */
     :root {
-        --tac-bg: #080808;
-        --tac-border: #333333;
-        --tac-text: #cccccc;
-        --tac-primary: #ffffff;
-        --tac-highlight: #ffb700; /* Amber Warning */
+        --tac-bg: #0b0f19; /* Updated to Deep Dark Blue-Black */
+        --tac-border: #1e3a8a; /* Border Blue */
+        --tac-text: #e0f2fe; /* Light Blue Text (Readable) */
+        --tac-primary: #3b82f6; /* Blue Accent */
+        --tac-highlight: #60a5fa;
         --tac-alert: #ff3333;
         --tac-success: #00cc66;
     }
 
-    /* =========================================
-     FLOATING TACTICAL BUTTON
-     ========================================= */
+    /* BUTTON COLOR UPDATE: Orange -> Night Blue */
     .tactical-toggle-btn {
         position: fixed;
-        bottom: 60px;
+        bottom: 80px; /* Default Desktop */
         right: 20px;
         width: 50px;
         height: 50px;
-        background: var(--tac-bg);
-        border: 1px solid var(--tac-border);
-        color: var(--tac-text);
-        z-index: 1000;
+        background: #0f172a; /* Slate 900 */
+        border: 1px solid #3b82f6; /* Blue 500 */
+        color: #60a5fa; /* Blue 400 */
+        z-index: 2147483647 !important;
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -206,15 +218,22 @@
         transition: all 0.2s;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
     }
+
+    @media (max-width: 640px) {
+        .tactical-toggle-btn {
+            bottom: 118px; /* Fixed as requested */
+        }
+    }
     .tactical-toggle-btn:hover {
-        border-color: var(--tac-primary);
-        color: var(--tac-primary);
+        background: #1e293b;
+        color: #93c5fd;
+        box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
     }
 
     .icon-frame {
         width: 28px;
         height: 28px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.3);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -224,10 +243,10 @@
         height: 16px;
     }
 
-    /* Alert State */
+    /* ALERT MODE NOW BLUE TOO (Or kept red if critical? User asked for Blue Night theme) */
     .tactical-toggle-btn.alert-mode {
-        border-color: var(--tac-highlight);
-        color: var(--tac-highlight);
+        border-color: #60a5fa;
+        color: #bfdbfe;
     }
     .led-indicator {
         position: absolute;
@@ -235,34 +254,30 @@
         right: 4px;
         width: 4px;
         height: 4px;
-        background: var(--tac-highlight);
-        box-shadow: 0 0 5px var(--tac-highlight);
+        background: #60a5fa;
+        box-shadow: 0 0 5px #60a5fa;
         animation: blink 1s steps(2, start) infinite;
     }
 
-    /* =========================================
-     MAIN PANEL
-     ========================================= */
     .tactical-panel {
         position: fixed;
         bottom: 50px;
         right: 20px;
         width: 380px;
         height: 450px;
-        background: var(--tac-bg);
-        border: 1px solid var(--tac-border);
+        background: #02040a; /* Very dark blue */
+        border: 1px solid #1e3a8a;
         display: flex;
         flex-direction: column;
-        z-index: 1002;
+        z-index: 2147483647 !important;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
-        font-family: "Rajdhani", monospace; /* Monospaced feel */
+        font-family: "Rajdhani", monospace;
     }
 
-    /* Header */
     .panel-header {
         height: 40px;
-        background: #111;
-        border-bottom: 1px solid var(--tac-border);
+        background: #0f172a;
+        border-bottom: 1px solid #1e3a8a;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -271,12 +286,12 @@
     .sys-label {
         font-size: 11px;
         font-weight: 700;
-        color: #666;
+        color: #94a3b8;
         letter-spacing: 1px;
     }
     .sys-id {
         font-size: 11px;
-        color: #444;
+        color: #3b82f6;
         margin-left: 8px;
         font-family: "Orbitron", sans-serif;
     }
@@ -293,62 +308,60 @@
     .db {
         width: 4px;
         height: 8px;
-        background: #222;
+        background: #1e293b;
     }
     .db.active {
-        background: #555;
+        background: #3b82f6;
     }
 
     .tac-close-btn {
         background: transparent;
         border: none;
-        color: #555;
+        color: #64748b;
         cursor: pointer;
         padding: 4px;
         transition: 0.2s;
     }
     .tac-close-btn:hover {
         color: #fff;
-        background: #222;
+        background: #1e3a8a;
     }
     .tac-close-btn svg {
         width: 18px;
         height: 18px;
     }
 
-    /* Mode Select (Tabs) */
     .mode-select {
         display: flex;
-        border-bottom: 1px solid var(--tac-border);
-        background: #0c0c0c;
+        border-bottom: 1px solid #1e3a8a;
+        background: #0b0f19;
     }
     .mode-btn {
         flex: 1;
         background: transparent;
         border: none;
-        color: #555;
+        color: #64748b;
         font-size: 12px;
         font-weight: 700;
         padding: 12px 0;
         cursor: pointer;
         letter-spacing: 1px;
-        border-right: 1px solid #1a1a1a;
+        border-right: 1px solid #1e293b;
         transition: 0.2s;
     }
     .mode-btn:last-child {
         border-right: none;
     }
     .mode-btn:hover {
-        background: #151515;
-        color: #888;
+        background: #1e293b;
+        color: #e0f2fe;
     }
     .mode-btn.active {
-        background: #222;
+        background: #172554;
         color: #fff;
-        border-bottom: 2px solid #555;
+        border-bottom: 2px solid #3b82f6;
     }
 
-    /* Data Stream (Messages) */
     .data-stream {
         flex: 1;
         overflow-y: auto;
@@ -356,9 +369,9 @@
         display: flex;
         flex-direction: column;
         gap: 4px;
-        background: #080808;
+        background: #020617;
         position: relative;
-        font-family: "Consolas", "Monaco", monospace; /* Terminal font */
+        font-family: "Consolas", "Monaco", monospace;
     }
     .scanline {
         position: absolute;
@@ -380,7 +393,7 @@
             100% 2px,
             3px 100%;
         pointer-events: none;
-        opacity: 0.3;
+        opacity: 0.1; /* Reduced scanline opacity for better contrast */
     }
 
     .entry-row {
@@ -394,44 +407,43 @@
         gap: 6px;
         margin-bottom: 2px;
         font-size: 10px;
-        opacity: 0.6;
+        opacity: 0.8;
     }
     .id-tag {
-        color: var(--tac-text);
+        color: #bfdbfe;
         font-weight: 700;
-    }
+    } /* Light Blue Tag */
     .src-tag {
-        color: #666;
+        color: #64748b;
         text-transform: uppercase;
     }
     .entry-content {
-        color: #aaa;
-    }
+        color: #ffffff;
+        text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+    } /* White text as requested */
 
-    /* Channel Specifics */
     .entry-row.city {
-        border-left-color: #333;
+        border-left-color: #3b82f6;
     }
     .entry-row.faction {
-        border-left-color: var(--tac-success);
-        background: rgba(0, 255, 100, 0.02);
+        border-left-color: #10b981;
+        background: rgba(16, 185, 129, 0.05);
     }
     .entry-row.faction .entry-content {
-        color: #cefcde;
+        color: #e0f2fe;
     }
 
-    /* Command Line (Input) */
     .command-line {
         height: 56px;
-        background: #000;
-        border-top: 1px solid var(--tac-border);
+        background: #02040a;
+        border-top: 1px solid #1e3a8a;
         display: flex;
         align-items: center;
         padding: 0 12px;
         gap: 8px;
     }
     .prompt {
-        color: #444;
+        color: #3b82f6;
         font-weight: 700;
     }
     .cmd-input {
@@ -446,15 +458,15 @@
         text-transform: uppercase;
     }
     .cmd-input::placeholder {
-        color: #333;
+        color: #475569;
     }
 
     .exec-btn {
         height: 36px;
         padding: 0 16px;
-        background: #1a1a1a;
-        border: 1px solid #333;
-        color: #888;
+        background: #1e3a8a;
+        border: 1px solid #3b82f6;
+        color: #bfdbfe;
         font-size: 10px;
         font-weight: 700;
         cursor: pointer;
@@ -462,12 +474,11 @@
         transition: 0.2s;
     }
     .exec-btn:hover {
-        background: #333;
+        background: #3b82f6;
         color: #fff;
-        border-color: #555;
+        border-color: #60a5fa;
     }
 
-    /* Backdrop */
     .tactical-backdrop {
         display: none;
     }
@@ -482,9 +493,6 @@
         }
     }
 
-    /* =========================================
-     MOBILE RESPONSIVE (CENTERED & TACTILE)
-     ========================================= */
     @media (max-width: 640px) {
         .tactical-backdrop {
             display: block;
@@ -506,51 +514,8 @@
             width: 95%;
             max-width: 400px;
             height: 60vh;
-            border: 1px solid #444;
+            border: 1px solid #1e3a8a;
             box-shadow: 0 0 0 1px #000;
-        }
-
-        /* Mobile UX: Bigger Touch Targets */
-        .panel-header {
-            height: 50px;
-            background: #111;
-        }
-        .sys-label {
-            font-size: 12px;
-        }
-
-        .tac-close-btn {
-            width: 40px;
-            height: 40px;
-            background: #1a1a1a;
-            border: 1px solid #333;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .tac-close-btn:active {
-            background: #333;
-        }
-
-        .mode-btn {
-            padding: 16px 0;
-            font-size: 14px;
-        }
-
-        .command-line {
-            height: 70px;
-            padding: 0 16px;
-        }
-        .cmd-input {
-            font-size: 16px;
-        } /* Prevent Zoom */
-
-        .exec-btn {
-            height: 44px;
-            background: #222;
-            color: #fff;
-            border-color: #555;
         }
     }
 </style>
